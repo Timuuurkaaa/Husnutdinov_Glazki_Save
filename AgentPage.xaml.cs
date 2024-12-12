@@ -103,12 +103,6 @@ namespace Husnutdinov_Glazki_Save
             ChangePage(0, 0);
         }
 
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Manager.MainFrame.Navigate(new AddEditPage());
-        }
-
         private void Filter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateAgents();
@@ -221,6 +215,26 @@ namespace Husnutdinov_Glazki_Save
         private void PageListBox_MouseUp(object sender, MouseButtonEventArgs e)
         {
             ChangePage(0, Convert.ToInt32(PageListBox.SelectedItem.ToString()) - 1);
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            Manager.MainFrame.Navigate(new AddEditPage((sender as Button).DataContext as Agent));
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            Manager.MainFrame.Navigate(new AddEditPage(null));
+        }
+
+        private void Page_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (Visibility == Visibility.Visible)
+            {
+                Husnutdinov_Glazki_SaveEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+                AgentsListView.ItemsSource = Husnutdinov_Glazki_SaveEntities.GetContext().Agent.ToList();
+                UpdateAgents();
+            }
         }
     }
 }
