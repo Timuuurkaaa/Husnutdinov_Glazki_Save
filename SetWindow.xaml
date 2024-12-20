@@ -1,0 +1,16 @@
+﻿<Window x:Class="Husnutdinov_Glazki_Save.SetWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Husnutdinov_Glazki_Save"
+        mc:Ignorable="d"
+        Title="SetWindow" Height="200" Width="300">
+    <Grid>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Изменить приоритет на:"></TextBlock>
+            <TextBox Name="TBPriority" Width="150" Height="30" FontSize="15"></TextBox>
+            <Button Name="IzmPriorBtn" Content="Изменить" Width="150" Height="30" FontSize="15" Click="IzmPriorBtn_Click"></Button>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -20,7 +20,8 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
             <TextBlock Text="Наименование" FontSize="15" Height="20" MinWidth="120" Width="auto" Margin="5"></TextBlock>
@@ -34,10 +35,10 @@
             <TextBlock Text="Директор" FontSize="15" Height="20" MinWidth="120" Width="auto" Margin="5"></TextBlock>
             <TextBox Text="{Binding DirectorName}" FontSize="15" Height="20" Width="400"></TextBox>
         </StackPanel>
-        <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Vertical" Grid.RowSpan="4">
-            <TextBlock Text="Логотип" FontSize="15" Height="20" Width="auto" Margin="5"></TextBlock>
-            <Image Name="LogoImage" Stretch="Fill" MinHeight="50" Height="100" Width="100"
-                   HorizontalAlignment="Center" Margin="5">
+        <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Vertical" Grid.RowSpan="2">
+            <TextBlock Text="Логотип" FontSize="15" Height="20" Width="auto" Margin="5" ></TextBlock>
+            <Image Name="LogoImage" Stretch="Fill" MinHeight="50" Height="70" Width="70"
+                   HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top">
                 <Image.Source>
                     <Binding Path="Logo">
                         <Binding.TargetNullValue>
@@ -48,9 +49,9 @@
                     </Binding>
                 </Image.Source>
             </Image>
-            <Button Content="Изменить" Name="ChangePictureBtn" Click="ChangePictureBtn_Click"></Button>
-        </StackPanel>
 
+        </StackPanel>
+        <Button Content="Изменить" Name="ChangePictureBtn" Click="ChangePictureBtn_Click" Grid.Row="6" HorizontalAlignment="Left"></Button>
 
         <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
             <TextBlock Text="Тип агента" FontSize="15" Height="20" Width="100" Margin="5"></TextBlock>
@@ -72,22 +73,61 @@
             <TextBlock Text="ИНН" FontSize="15" Height="20" Width="100" Margin="5"></TextBlock>
             <TextBox Text="{Binding INN}" FontSize="15" Height="20" Width="100"></TextBox>
         </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
+        <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal">
             <TextBlock Text="КПП" FontSize="15" Height="20" Width="100" Margin="5"></TextBlock>
             <TextBox Text="{Binding KPP}" FontSize="15" Height="20" Width="100"></TextBox>
         </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
+        <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal">
             <TextBlock Text="Телефон" FontSize="15" Height="20" Width="100" Margin="5"></TextBlock>
             <TextBox Text="{Binding Phone}" FontSize="15" Height="20" Width="200"></TextBox>
         </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="5" Orientation="Horizontal">
+        <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal">
             <TextBlock Text="e-mail" FontSize="15" Height="20" Width="100" Margin="5"></TextBlock>
             <TextBox Text="{Binding Email}" FontSize="15" Height="20" Width="200"></TextBox>
         </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="6" Orientation="Horizontal">
+        <StackPanel Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="2" Orientation="Horizontal">
             <Button Content="Сохранить" Name="SaveBtn" Click="SaveBtn_Click" Margin="5"></Button>
             <Button Content="Удалить" Name="DeleteBtn" Click="DeleteBtn_Click" Margin="5"
                     Opacity="{Binding ID}"></Button>
         </StackPanel>
+        <ListView Name="HistoryOfRealisationListView" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" Grid.RowSpan="1"  HorizontalAlignment="Right" SelectionMode="Multiple">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="500"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="200"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="{Binding Product.Title}" Margin="5" FontSize="20" Grid.Column="0"></TextBlock>
+                        <TextBlock Text="{Binding ProductCount}" Margin="5" FontSize="20" Grid.Column="1"></TextBlock>
+                        <TextBlock Text="{Binding SaleDateOnly}" Margin="5" FontSize="20" Grid.Column="2"></TextBlock>
+                        
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button Name="HistoryAddBtn" Content="Добавить продажу" Grid.Column="1" Grid.Row="5" Width="200" Click="HistoryAddBtn_Click"></Button>
+        <Button Name="HistoryDeleteBtn" Content="Удалить продажу" Grid.Column="2" Grid.Row="5" Width="200" Click="HistoryDeleteBtn_Click"></Button>
+
+        <StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" Orientation="Horizontal">
+            <TextBlock Text="Укажите название продукта"></TextBlock>
+            <ComboBox Name="ProductTitleCombo" IsEditable="True" DisplayMemberPath="TitleComboBox" Width="150" Margin="5">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel></VirtualizingStackPanel>
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+            <TextBlock Text="Количество"></TextBlock>
+            <TextBox Name="TextBoxProductCount" Width="50" Margin="5"></TextBox>
+            <TextBlock Text="Дата"></TextBlock>
+            <DatePicker Name="DatePickerProductSale" Width="100" Margin="5"></DatePicker>
+        </StackPanel>
+        
     </Grid>
 </Page>

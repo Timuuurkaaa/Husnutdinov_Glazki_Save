@@ -77,11 +77,11 @@ namespace Husnutdinov_Glazki_Save
             }
             if (Sort.SelectedIndex == 3)
             {
-                currentAgents = currentAgents.OrderBy(p => p.Title).ToList();
+                currentAgents = currentAgents.OrderBy(p => p.Discount).ToList();
             }
             if (Sort.SelectedIndex == 4)
             {
-                currentAgents = currentAgents.OrderBy(p => p.Title).ToList();
+                currentAgents = currentAgents.OrderByDescending(p => p.Discount).ToList();
             }
             if (Sort.SelectedIndex == 5)
             {
@@ -234,6 +234,54 @@ namespace Husnutdinov_Glazki_Save
                 Husnutdinov_Glazki_SaveEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
                 AgentsListView.ItemsSource = Husnutdinov_Glazki_SaveEntities.GetContext().Agent.ToList();
                 UpdateAgents();
+            }
+        }
+
+        private void ChangePriorityButton_Click(object sender, RoutedEventArgs e)
+        {
+            int maxPrior = 0;
+            foreach (Agent agent in AgentsListView.SelectedItems)
+            {
+                if(agent.Priority > maxPrior)
+                    maxPrior = agent.Priority;
+            }
+            SetWindow setWindow = new SetWindow(maxPrior);
+            setWindow.ShowDialog();
+            if (string.IsNullOrEmpty(setWindow.TBPriority.Text))
+            {
+                MessageBox.Show("Изменения не произошло");
+            }
+            else
+            {
+                int newPrior = Convert.ToInt32(setWindow.TBPriority.Text);
+                //замена приоритета на новый
+                foreach (Agent agent in AgentsListView.SelectedItems)
+                {
+                    agent.Priority = newPrior;
+                }
+                //сохр
+                try
+                {
+                    Husnutdinov_Glazki_SaveEntities.GetContext().SaveChanges();
+                    MessageBox.Show("информация сохранена");
+                    UpdateAgents();
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString());
+                }
+            }
+        }
+
+        private void AgentsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (AgentsListView.SelectedItems.Count > 1)
+            {
+                ChangePriorityButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ChangePriorityButton.Visibility = Visibility.Hidden;
             }
         }
     }

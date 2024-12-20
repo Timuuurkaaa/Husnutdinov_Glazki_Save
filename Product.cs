@@ -11,9 +11,12 @@ namespace Husnutdinov_Glazki_Save
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public partial class Product
     {
+        [NotMapped]
+        public string TitleComboBox { get { return Title; } }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Product()
         {

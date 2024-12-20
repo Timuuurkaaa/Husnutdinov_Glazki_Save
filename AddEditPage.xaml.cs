@@ -19,6 +19,7 @@ namespace Husnutdinov_Glazki_Save
     public partial class AddEditPage : Page
     {
         private Agent currentAgent = new Agent();
+        private ProductSale currentProductProductSale = new ProductSale();
         public AddEditPage(Agent SelectedAgent)
         {
             InitializeComponent();
@@ -31,6 +32,13 @@ namespace Husnutdinov_Glazki_Save
                 ComboType.SelectedIndex = currentAgent.AgentTypeID - 1;
             }
 
+            var currentProductSales = Husnutdinov_Glazki_SaveEntities.GetContext().ProductSale.ToList();
+            var TitleAll = Husnutdinov_Glazki_SaveEntities.GetContext().Product.ToList();
+            currentProductSales = currentProductSales.Where(x => x.AgentID == currentAgent.ID).ToList();
+            HistoryOfRealisationListView.ItemsSource = currentProductSales;
+            ProductTitleCombo.ItemsSource = TitleAll;
+
+            DataContext = currentProductProductSale;
             DataContext = currentAgent;
         }
 
@@ -138,6 +146,81 @@ namespace Husnutdinov_Glazki_Save
                     {
                         MessageBox.Show(ex.Message.ToString());
                     }
+                }
+            }
+        }
+
+        private void HistoryAddBtn_Click(object sender, RoutedEventArgs e)
+        {
+            StringBuilder errors = new StringBuilder();
+            if (ProductTitleCombo.SelectedItem == null)
+                errors.AppendLine("Укажите наименование продукта");
+            bool flag = false;
+            for (int i = 0; i < TextBoxProductCount.Text.Length; i++)
+            {
+                if (TextBoxProductCount.Text[i] < '0' || TextBoxProductCount.Text[i] > '9')
+                {
+                    flag = true;
+                }
+            }
+            if (flag)
+            {
+                errors.AppendLine("Укажите количество продукта");
+            }
+            if(Convert.ToInt32(TextBoxProductCount.Text)<=0)
+            {
+              errors.AppendLine("Укажите положительное количество продукта");
+            }
+            if (string.IsNullOrWhiteSpace(DatePickerProductSale.Text))
+                errors.AppendLine("Укажите дату продажи");
+            if (errors.Length > 0)
+            {
+                MessageBox.Show(errors.ToString());
+                return;
+            }
+
+            if (currentAgent.ID == 0)
+                Husnutdinov_Glazki_SaveEntities.GetContext().Agent.Add(currentAgent);
+            
+
+            currentProductProductSale.AgentID = currentAgent.ID;
+            currentProductProductSale.ProductID = ProductTitleCombo.SelectedIndex + 1;
+            currentProductProductSale.SaleDate = Convert.ToDateTime(DatePickerProductSale.Text);
+            currentProductProductSale.ProductCount = Convert.ToInt32(TextBoxProductCount.Text);
+
+            if(currentProductProductSale != null)
+                Husnutdinov_Glazki_SaveEntities.GetContext().ProductSale.Add(currentProductProductSale);
+
+            //сохр изм, если нет ошибок
+            try
+            {
+                Husnutdinov_Glazki_SaveEntities.GetContext().SaveChanges();
+                MessageBox.Show("Информация сохранена");
+                Manager.MainFrame.GoBack();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+        }
+
+        private void HistoryDeleteBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Вы точно хотите выполнить удаление?", "Внимание!", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    foreach(ProductSale ItemsProductSale in HistoryOfRealisationListView.SelectedItems)
+                    {
+                        Husnutdinov_Glazki_SaveEntities.GetContext().ProductSale.Remove(ItemsProductSale);
+                    }
+                    Husnutdinov_Glazki_SaveEntities.GetContext().SaveChanges();
+                    MessageBox.Show("Информация удалена!");
+                    Manager.MainFrame.GoBack();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString());
                 }
             }
         }

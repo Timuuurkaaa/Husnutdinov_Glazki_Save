@@ -22,5 +22,25 @@ namespace Husnutdinov_Glazki_Save
     
         public virtual Agent Agent { get; set; }
         public virtual Product Product { get; set; }
+
+        public decimal Stoimost
+        {
+            get
+            {
+                decimal s;
+                s = Product.MinCostForAgent * this.ProductCount;
+                return s;
+            }
+        }
+
+        public string SaleDateOnly
+        {
+            get
+            {
+                return this.SaleDate.ToString("d");
+            }
+        }
+
+
     }
 }
